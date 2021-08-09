@@ -12,7 +12,6 @@ public class BoardManager : MonoBehaviour
 		public int minimum;             //Minimum value for our Count class.
 		public int maximum;             //Maximum value for our Count class.
 
-
 		//Assignment constructor.
 		public Count(int min, int max)
 		{
@@ -20,7 +19,6 @@ public class BoardManager : MonoBehaviour
 			maximum = max;
 		}
 	}
-
 
 	public int columns = 8;                                         //Number of columns in our game board.
 	public int rows = 8;                                            //Number of rows in our game board.
@@ -64,7 +62,7 @@ public class BoardManager : MonoBehaviour
 	{
 		//Instantiate Board and set boardHolder to its transform.
 		boardHolder = new GameObject("Board").transform;
-
+		
 		//Loop along x axis, starting from -1 (to fill corner) with floor or outerwall edge tiles.
 		for (int x = -1; x < columns + 1; x++)
 		{

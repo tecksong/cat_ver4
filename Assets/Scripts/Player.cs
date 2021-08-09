@@ -33,7 +33,7 @@ public class Player : MovingObject
 		animator = GetComponent<Animator>();
 
 		//Get the current food point total stored in GameManager.instance between levels.
-		food = GameManager.instance.playerFoodPoints;
+		food = MainMenu.HP;
 
 		//Set the foodText to reflect the current player food total.
 		HPText.text = "HP: " + food;
@@ -68,7 +68,7 @@ public class Player : MovingObject
 	private void OnDisable()
 	{
 		//When Player object is disabled, store the current local food total in the GameManager so it can be re-loaded in next level.
-		GameManager.instance.playerFoodPoints = food;
+		MainMenu.HP = food;
 	}
 
 
@@ -199,8 +199,10 @@ public class Player : MovingObject
 	{
 		//Load the last scene loaded, in this case Main, the only scene in the game. And we load it in "Single" mode so it replace the existing one
 		//and not load all the scene object in the current scene.
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+		MainMenu.mapLevel += 1;
+		MainMenu.HP = food;
 
+		SceneManager.LoadScene(1);
 	}
 
 
