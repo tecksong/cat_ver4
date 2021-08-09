@@ -3,20 +3,20 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;       //Allows us to use Lists. 
 using UnityEngine.UI;                   //Allows us to use UI.
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
 	public float levelStartDelay = 2f;                      //Time to wait before starting level, in seconds.
 	public float turnDelay = 0.1f;                          //Delay between each Player turn.
-	public int playerFoodPoints = 100;                      //Starting value for Player food points.
+	public int playerFoodPoints;                      //Starting value for Player food points.
 	public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
 	[HideInInspector] public bool playersTurn = true;       //Boolean to check if it's players turn, hidden in inspector but public.
-
 
 	private Text levelText;                                 //Text to display current level number.
 	private GameObject levelImage;                          //Image to block out level as levels are being set up, background for levelText.
 	private BoardManager boardScript;                       //Store a reference to our BoardManager which will set up the level.
-	private int level = 1;                                  //Current level number, expressed in game as "Day 1".
+	public int level;                                  //Current level number, expressed in game as "Day 1".
 	private List<Enemy> enemies;                            //List of all Enemy units, used to issue them move commands.
 	private bool enemiesMoving;                             //Boolean to check if enemies are moving.
 	private bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
             //if not, set instance to this
             instance = this;
-
+     
         //If instance already exists and it's not this:
         else if (instance != this)
 
@@ -39,37 +39,24 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
         //Assign enemies to a new List of Enemy objects.
         enemies = new List<Enemy>();
 
         //Get a component reference to the attached BoardManager script
         boardScript = GetComponent<BoardManager>();
+        
+        level = MainMenu.mapLevel;
 
-		//Call the InitGame function to initialize the first level 
-		InitGame();
+        playerFoodPoints = MainMenu.HP;
+
+        //Call the InitGame function to initialize the first level 
+        InitGame(level);
 	}
 
-    //this is called only once, and the paramter tell it to be called only after the scene was loaded
-    //(otherwise, our Scene Load callback would be called the very first load, and we don't want that)
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static public void CallbackInitialization()
-    {
-        //register the callback to be called everytime the scene is loaded
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    //This is called each time a scene is loaded.
-    static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-    {
-        instance.level++;
-        instance.InitGame();
-    }
-
-
     //Initializes the game for each level.
-    void InitGame()
+    void InitGame(int level)
 	{
         //While doingSetup is true the player can't move, prevent player from moving while title card is up.
         doingSetup = true;
@@ -140,6 +127,14 @@ public class GameManager : MonoBehaviour
 
         //Disable this GameManager.
         enabled = false;
+
+        Invoke("loadGameOverScene", 2);
+
+    }
+
+    public void loadGameOverScene()
+    {
+        SceneManager.LoadScene(2);
     }
 
     //Coroutine to move enemies in sequence.
