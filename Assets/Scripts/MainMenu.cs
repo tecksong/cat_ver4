@@ -14,6 +14,7 @@ public class MainMenu : MonoBehaviour
         HP = 100;
 
         SceneManager.LoadScene(1);
+        mainMenuSoundManager.instance.musicSource.Stop();
     }
     public void exit()
     {

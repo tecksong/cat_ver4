@@ -201,7 +201,6 @@ public class Player : MovingObject
 		//and not load all the scene object in the current scene.
 		MainMenu.mapLevel += 1;
 		MainMenu.HP = food;
-
 		SceneManager.LoadScene(1);
 	}
 

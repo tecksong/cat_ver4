@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Completed;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +8,9 @@ public class GameOver : MonoBehaviour
 {
     public void Start()
     {
-        Invoke("Setup", 2);
+
+
+        GameOverSoundManager.instance.musicSource.Play();
     }
 
     public void Setup()
@@ -20,6 +23,8 @@ public class GameOver : MonoBehaviour
         MainMenu.mapLevel = 1;
         MainMenu.HP = 100;
         SceneManager.LoadScene(1);
+        GameOverSoundManager.instance.musicSource.Stop();
+        SoundManager.instance.musicSource.Play();
     }
     public void exit()
     {
