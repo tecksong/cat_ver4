@@ -25,20 +25,12 @@ public class Player : MovingObject
 	private int food;                           //Used to store player food points total during level.
 	private bool facingLeft;
 
-	public Image img;
-	public float time = 5;
-	public Color flashColor;
-	private Color defaultColor;
-
-	private bool damaged = false;
-
 	//Start overrides the Start function of MovingObject
 	protected override void Start()
 	{
 		facingLeft = true;
 		//Get a component reference to the Player's animator component
 		animator = GetComponent<Animator>();
-		defaultColor = img.color;
 
 		//Get the current food point total stored in GameManager.instance between levels.
 		food = MainMenu.HP;
@@ -87,8 +79,6 @@ public class Player : MovingObject
 
 		int horizontal = 0;     //Used to store the horizontal move direction.
 		int vertical = 0;       //Used to store the vertical move direction.
-
-		PlayHurtEffect();
 
 		//Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
 		horizontal = (int)(Input.GetAxisRaw("Horizontal"));
@@ -219,6 +209,9 @@ public class Player : MovingObject
 	//It takes a parameter loss which specifies how many points to lose.
 	public void LoseFood(int loss)
 	{
+		//Set the trigger for the player animator to transition to the playerHit animation.
+		animator.SetTrigger("isDie");
+
 		//Subtract lost food points from the players total.
 		food -= loss;
 
@@ -229,25 +222,6 @@ public class Player : MovingObject
 		CheckIfGameOver();
 	}
 
-	public void Hurt()
-	{
-		animator.SetTrigger("isHurt");
-		damaged = true;
-	}
-
-	void PlayHurtEffect()
-	{
-		if (damaged)
-		{
-			img.color = flashColor;
-		}
-		else
-		{
-			img.color = Color.Lerp(img.color, Color.clear, time * Time.deltaTime);
-		}
-
-		damaged = false;
-	}
 
 	//CheckIfGameOver checks if the player is out of food points and if so, ends the game.
 	private void CheckIfGameOver()
