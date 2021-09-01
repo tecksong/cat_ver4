@@ -4,21 +4,38 @@ using Completed;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random; 
 
 //Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
 public class Player : MovingObject
 {
+	
+	public class Count
+	{
+		public int minimum;             //Minimum value for our Count class.
+		public int maximum;             //Maximum value for our Count class.
+
+		//Assignment constructor.
+		public Count(int min, int max)
+		{
+			minimum = min;
+			maximum = max;
+		}
+	}
+	
 	public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
 	public int pointsPerFood = 10;              //Number of points to add to player food points when picking up a food object.
+	public int HPBuff = 0;						//Number of HP buff that add or decrease to player food points randomly.
+	public static int keyNum = 1;				//Number of Key
 	public int pointsPerSoda = 20;              //Number of points to add to player food points when picking up a soda object.
-	public int barelDamage = 1;                  //How much damage a player attack the barel.
-	public Text HPText;                       //UI Text to display current player food total.
+	public int barelDamage = 1;                 //How much damage a player attack the barel.
+	public Text HPText;							//UI Text to display current player food total.
 	public AudioClip moveSound1;                //1 of 2 Audio clips to play when player moves.
 	public AudioClip moveSound2;                //2 of 2 Audio clips to play when player moves.
 	public AudioClip eatSound1;                 //1 of 2 Audio clips to play when player collects a food object.
 	public AudioClip eatSound2;                 //2 of 2 Audio clips to play when player collects a food object.
-	//public AudioClip drinkSound1;               //1 of 2 Audio clips to play when player collects a soda object.
-	//public AudioClip drinkSound2;               //2 of 2 Audio clips to play when player collects a soda object.
+	//public AudioClip drinkSound1;             //1 of 2 Audio clips to play when player collects a soda object.
+	//public AudioClip drinkSound2;             //2 of 2 Audio clips to play when player collects a soda object.
 	public AudioClip gameOverSound;             //Audio clip to play when player dies.
 
 	private Animator animator;                  //Used to store a reference to the Player's animator component.
@@ -31,6 +48,8 @@ public class Player : MovingObject
 	private Color defaultColor;
 
 	private bool damaged = false;
+
+	public BoardManager boardManager;
 
 	//Start overrides the Start function of MovingObject
 	protected override void Start()
@@ -51,6 +70,25 @@ public class Player : MovingObject
 
 
 	}
+	
+	/*IEnumerator HitHPBuff()
+	{
+
+		//Set the trigger for the player animator to transition to the playerHit animation.
+		animator.SetTrigger("isDie");
+
+		int food1 = food;
+		//Subtract lost food points from the players total.
+		food -= food;
+
+		//Update the food display with the new total.
+		HPText.text = "-" + food1 + " HP: " + food;
+
+		yield return new WaitForSeconds(2);
+
+		//Check to see if game has ended.
+		CheckIfGameOver();
+	}*/
 
 	IEnumerator HitSpike()
 	{
@@ -200,7 +238,31 @@ public class Player : MovingObject
 			StartCoroutine(HitSpike());
 
 		}
+		//Check if the tag of the trigger collided with is HPBuff
+		else if (other.tag == "HPBuff")
+		{
+			HPBuff = Random.Range(-5, 10);
+			
+			food += HPBuff;
+			
+			if(HPBuff >= 0){
+				HPText.text = "+" + HPBuff + "HP: " + food;
+			}
+			else if(HPBuff < 0){
+				HPText.text = HPBuff + "HP: " + food;
+			}
+			
+			CheckIfGameOver();
+			
+			other.gameObject.SetActive(false);
+		}
+		//Check if the tag of the trigger collided with is Key.
+		else if (other.tag == "Key")
+		{
+			keyNum -= 1;
 
+			other.gameObject.SetActive(false);
+		}
 	}
 
 

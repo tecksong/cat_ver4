@@ -55,6 +55,12 @@ MonoBehaviour:
   barelCount:
     minimum: 1
     maximum: 5
+  HPBuffCount:
+    minimum: 1
+    maximum: 5
+  keyCount:
+    minimum: 1
+    maximum: 1
   exit: {fileID: 5261441737906391757, guid: eb4890acdf6ce0e4b85ab394d45727fd, type: 3}
   floorTiles:
   - {fileID: 712917257597334154, guid: 2f34945c8990fec40b6302e682d9ec50, type: 3}
@@ -72,6 +78,10 @@ MonoBehaviour:
   - {fileID: 8233540349992784625, guid: 1e9e9dd999cb3a64dbf2ecf502875477, type: 3}
   outerWallTiles:
   - {fileID: 6620545598774539973, guid: dba2bfdcbe8c549488593d5ed52cb1c6, type: 3}
+  HPBuffTiles:
+  - {fileID: 4300458070066934928, guid: af7b4357972feb24aa7b57d1615f87ce, type: 3}
+  keyTiles:
+  - {fileID: 9092797145727023880, guid: 86da30f165c0d5145959007359b987da, type: 3}
 --- !u!114 &8226173079383790519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,3 +98,4 @@ MonoBehaviour:
   turnDelay: 0.1
   playerFoodPoints: 100
   playersTurn: 1
+  level: 0

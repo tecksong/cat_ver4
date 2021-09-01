@@ -8,6 +8,8 @@ TagManager:
   - Exit
   - Enemy
   - Spike
+  - HPBuff
+  - Key
   layers:
   - Default
   - TransparentFX

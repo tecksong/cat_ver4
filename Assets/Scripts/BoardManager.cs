@@ -25,7 +25,9 @@ public class BoardManager : MonoBehaviour
 	public Count wallCount = new Count(5, 9);                       //Lower and upper limit for our random number of walls per level.
 	public Count foodCount = new Count(1, 5);                       //Lower and upper limit for our random number of food items per level.
 	public Count barelCount = new Count(1, 5);
-	public GameObject exit;                                         //Prefab to spawn for exit.
+	public Count HPBuffCount = new Count(1,5);						//Lower and upper limit for HP Buff tile will be generated
+	public Count keyCount = new Count(1, 1);						//Number of Key
+	public GameObject exit;											//Prefab to spawn for exit.
 	public GameObject[] floorTiles;                                 //Array of floor prefabs.
 	public GameObject[] wallTiles;                                  //Array of wall prefabs.
 	public GameObject[] foodTiles;                                  //Array of food prefabs.
@@ -33,6 +35,8 @@ public class BoardManager : MonoBehaviour
 	public GameObject[] spikeTiles;
 	public GameObject[] enemyTiles;                                 //Array of enemy prefabs.
 	public GameObject[] outerWallTiles;                             //Array of outer tile prefabs.
+	public GameObject[] HPBuffTiles;
+	public GameObject[] keyTiles;
 
 	private Transform boardHolder;                                  //A variable to store a reference to the transform of our Board object.
 	private List<Vector3> gridPositions = new List<Vector3>();  //A list of possible locations to place tiles.
@@ -102,8 +106,7 @@ public class BoardManager : MonoBehaviour
 		//Return the randomly selected Vector3 position.
 		return randomPosition;
 	}
-
-
+	
 	//LayoutObjectAtRandom accepts an array of game objects to choose from along with a minimum and maximum range for the number of objects to create.
 	void LayoutObjectAtRandom(GameObject[] tileArray, int minimum, int maximum)
 	{
@@ -124,6 +127,12 @@ public class BoardManager : MonoBehaviour
 		}
 	}
 
+	public void createGoal()
+    {
+		//Instantiate the exit tile in the upper right hand corner of our game board
+		Instantiate(exit, new Vector3(0, rows - 1, 0f), Quaternion.identity);
+	}
+
 
 	//SetupScene initializes our level and calls the previous functions to lay out the game board
 	public void SetupScene(int level)
@@ -142,6 +151,9 @@ public class BoardManager : MonoBehaviour
 
 		//Instantiate a random number of food tiles based on minimum and maximum, at randomized positions.
 		LayoutObjectAtRandom(foodTiles, foodCount.minimum, foodCount.maximum);
+		
+		//Instantiate a random number of Buff tiles based on minimum and maximum, at randomized positions.
+		LayoutObjectAtRandom(HPBuffTiles, HPBuffCount.minimum, HPBuffCount.maximum);
 
 		//Determine number of enemies based on current level number, based on a logarithmic progression
 		int enemyCount = (int)Mathf.Log(level, 2f);
@@ -155,8 +167,18 @@ public class BoardManager : MonoBehaviour
 		//Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
 		LayoutObjectAtRandom(spikeTiles, spikeCount, spikeCount);
 
-		//Instantiate the exit tile in the upper right hand corner of our game board
-		Instantiate(exit, new Vector3(0, rows - 1, 0f), Quaternion.identity);
+		LayoutObjectAtRandom(keyTiles, keyCount.minimum, keyCount.maximum);
 	}
+
+	void Update()
+    {
+		if(Player.keyNum == 0)
+        {
+			//Instantiate the exit tile in the upper right hand corner of our game board
+			createGoal();
+
+			Player.keyNum += 1;
+		}
+    }
 }
 
